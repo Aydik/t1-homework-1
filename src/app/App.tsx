@@ -1,8 +1,14 @@
+import { TaskProvider } from 'app/context/TaskContext.tsx';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRouter } from 'app/router/AppRouter.tsx';
+
 function App() {
   return (
-    <>
-      <h1>Vite + React</h1>
-    </>
+    <TaskProvider>
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
+    </TaskProvider>
   );
 }
 
