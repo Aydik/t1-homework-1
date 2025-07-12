@@ -4,16 +4,28 @@ import type { Task } from './model/types';
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { useNavigate } from 'react-router-dom';
+import { useTask } from 'app/context/TaskContext.tsx';
 
 interface Props {
-  task: Task;
+  id: string;
 }
 
-export const TaskItem: FC<Props> = ({ task }) => {
+export const TaskDetails: FC<Props> = ({ id }) => {
+  const { tasks } = useTask();
+  const task = tasks.find((task) => task.id === id);
+
   const navigate = useNavigate();
-  const handleEdit = (id: string) => {
-    navigate(`task/${id}`);
+  const handleCancel = () => {
+    navigate('/');
   };
+
+  if (!task) {
+    return (
+      <Typography type="h1" variant="Header/H1">
+        Задача не найдена
+      </Typography>
+    );
+  }
   return (
     <div className={styles.card}>
       <div>
@@ -36,8 +48,8 @@ export const TaskItem: FC<Props> = ({ task }) => {
             Приоритет: {task.priority}
           </Tag>
         </div>
-        <Button dimension="s" appearance="tertiary" onClick={() => handleEdit(task.id)}>
-          Редактировать
+        <Button dimension="s" appearance="tertiary" onClick={handleCancel}>
+          Отменить
         </Button>
       </div>
     </div>
