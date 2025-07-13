@@ -1,0 +1,23 @@
+.notFound{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.form{
+  max-width: 500px;
+}
+.caption{
+  text-align: center;
+}
+.fields{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.buttons{
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
