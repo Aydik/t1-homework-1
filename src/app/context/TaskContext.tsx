@@ -6,6 +6,7 @@ import { initialTasks } from './initialTasks.ts';
 interface TaskContextValue {
   tasks: Task[];
   setTasks: Dispatch<SetStateAction<Task[]>>;
+  updateTaskById: (id: string, updatedTask: Partial<Task>) => void;
 }
 
 const TaskContext = createContext<TaskContextValue | undefined>(undefined);
@@ -13,7 +14,15 @@ const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
-  return <TaskContext.Provider value={{ tasks, setTasks }}>{children}</TaskContext.Provider>;
+  const updateTaskById = (id: string, updatedTask: Partial<Task>) => {
+    setTasks((prev) => prev.map((task) => (task.id === id ? { ...task, ...updatedTask } : task)));
+  };
+
+  return (
+    <TaskContext.Provider value={{ tasks, setTasks, updateTaskById }}>
+      {children}
+    </TaskContext.Provider>
+  );
 };
 
 export const useTask = () => {

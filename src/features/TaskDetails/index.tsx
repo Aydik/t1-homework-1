@@ -4,14 +4,19 @@ import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useTask } from 'app/context/TaskContext.tsx';
-import { categories, priorities, statuses, type Task } from 'entities/TaskItem/model/types.ts';
+import {
+  CATEGORY_VALUES,
+  PRIORITY_VALUES,
+  STATUS_VALUES,
+  type Task,
+} from 'entities/TaskItem/model/types.ts';
 
 interface Props {
   id: string;
 }
 
 export const TaskDetails: FC<Props> = ({ id }) => {
-  const { tasks } = useTask();
+  const { tasks, updateTaskById } = useTask();
   const task = tasks.find((task) => task.id === id);
 
   const navigate = useNavigate();
@@ -19,9 +24,9 @@ export const TaskDetails: FC<Props> = ({ id }) => {
   const [formState, setFormState] = useState<Omit<Task, 'id'>>({
     title: task?.title || '',
     description: task?.description || '',
-    category: task?.category || categories[0],
-    status: task?.status || statuses[0],
-    priority: task?.priority || priorities[0],
+    category: task?.category || CATEGORY_VALUES[0],
+    status: task?.status || STATUS_VALUES[0],
+    priority: task?.priority || PRIORITY_VALUES[0],
   });
 
   if (!task) {
@@ -42,8 +47,10 @@ export const TaskDetails: FC<Props> = ({ id }) => {
   };
 
   const handleSubmit = () => {
-    console.log('Submitted values:', formState);
-    navigate('/');
+    if (formState.title.length > 0) {
+      updateTaskById(id, formState);
+      navigate('/');
+    }
   };
 
   return (
@@ -63,7 +70,8 @@ export const TaskDetails: FC<Props> = ({ id }) => {
           onChange={(e) => handleChange('title', e.target.value)}
           placeholder="Введите заголовок"
           label="Заголовок"
-          required={true}
+          status={formState.title.length > 0 ? undefined : 'error'}
+          required
         />
         <InputField
           value={formState.description}
@@ -77,8 +85,9 @@ export const TaskDetails: FC<Props> = ({ id }) => {
           label="Категория"
           value={formState.category}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => handleChange('category', e.target.value)}
+          required
         >
-          {categories.map((option) => (
+          {CATEGORY_VALUES.map((option) => (
             <Option key={option} value={option}>
               {option}
             </Option>
@@ -90,8 +99,9 @@ export const TaskDetails: FC<Props> = ({ id }) => {
           label="Статус"
           value={formState.status}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => handleChange('status', e.target.value)}
+          required
         >
-          {statuses.map((option) => (
+          {STATUS_VALUES.map((option) => (
             <Option key={option} value={option}>
               {option}
             </Option>
@@ -103,8 +113,9 @@ export const TaskDetails: FC<Props> = ({ id }) => {
           label="Приоритет"
           value={formState.priority}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => handleChange('priority', e.target.value)}
+          required
         >
-          {priorities.map((option) => (
+          {PRIORITY_VALUES.map((option) => (
             <Option key={option} value={option}>
               {option}
             </Option>
