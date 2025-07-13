@@ -6,7 +6,7 @@ import styles from './index.module.scss';
 export const TaskPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.taskPage}>
       <TaskDetails id={id as string} />
     </div>
   );
