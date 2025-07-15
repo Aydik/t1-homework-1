@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { deleteTaskById } from 'entities/TaskItem/model/taskSlice.ts';
 import { Icon } from 'shared/ui/Icon/Icon.tsx';
+import { formatDate } from 'shared/lib/formatDate.ts';
 
 interface Props {
   task: Task;
@@ -44,6 +45,9 @@ export const TaskItem: FC<Props> = ({ task }) => {
             Приоритет: {task.priority}
           </Tag>
         </div>
+        <Typography type="p" variant="Caption/XS" className={styles.createdAt}>
+          {formatDate(task.createdAt)}
+        </Typography>
         <div className={styles.controlBlock}>
           <Button dimension="s" appearance="tertiary" onClick={handleEdit}>
             Редактировать

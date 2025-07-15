@@ -24,7 +24,10 @@ const tasksSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
-    updateTaskById(state, action: PayloadAction<{ id: string; updatedTask: Omit<Task, 'id'> }>) {
+    updateTaskById(
+      state,
+      action: PayloadAction<{ id: string; updatedTask: Omit<Task, 'id' | 'createdAt'> }>,
+    ) {
       const { id, updatedTask } = action.payload;
       const taskIndex = state.tasks.findIndex((task) => task.id === id);
 
@@ -40,9 +43,10 @@ const tasksSlice = createSlice({
       state.tasks = state.tasks.filter((task) => task.id !== action.payload);
       saveTasks(state.tasks);
     },
-    createTask(state, action: PayloadAction<Omit<Task, 'id'>>) {
+    createTask(state, action: PayloadAction<Omit<Task, 'id' | 'createdAt'>>) {
       const newTask: Task = {
         id: uuidv4(),
+        createdAt: new Date(),
         ...action.payload,
       };
       state.tasks.push(newTask);

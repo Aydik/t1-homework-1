@@ -1,5 +1,5 @@
 import { type ChangeEvent, type FC, useEffect, useState } from 'react';
-import { Button, InputField, Option, SelectField } from '@admiral-ds/react-ui';
+import { Button, Divider, InputField, Option, SelectField } from '@admiral-ds/react-ui';
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ export const TaskForm: FC<Props> = ({ id }) => {
 
   const navigate = useNavigate();
 
-  const [formState, setFormState] = useState<Omit<Task, 'id'>>({
+  const [formState, setFormState] = useState<Omit<Task, 'id' | 'createdAt'>>({
     title: '',
     description: '',
     category: CATEGORY_VALUES[0],
@@ -84,6 +84,7 @@ export const TaskForm: FC<Props> = ({ id }) => {
       <Typography type="h1" variant="Header/H1" className={styles.caption}>
         {id ? 'Редактировать задачу' : 'Создать задачу'}
       </Typography>
+      <Divider />
       <div className={styles.fields}>
         <InputField
           value={formState.title}

@@ -8,6 +8,7 @@ export const initialTasks: Task[] = [
     category: 'Bug',
     status: 'In Progress',
     priority: 'High',
+    createdAt: new Date('2025-07-12T14:25:00'),
   },
   {
     id: '2',
@@ -16,6 +17,7 @@ export const initialTasks: Task[] = [
     category: 'Feature',
     status: 'To Do',
     priority: 'Medium',
+    createdAt: new Date('2025-07-04T09:42:00'),
   },
   {
     id: '3',
@@ -24,6 +26,7 @@ export const initialTasks: Task[] = [
     category: 'Documentation',
     status: 'Done',
     priority: 'Low',
+    createdAt: new Date('2025-07-08T11:10:00'),
   },
   {
     id: '4',
@@ -32,6 +35,7 @@ export const initialTasks: Task[] = [
     category: 'Refactor',
     status: 'In Progress',
     priority: 'Medium',
+    createdAt: new Date('2025-07-01T16:35:00'),
   },
   {
     id: '5',
@@ -40,6 +44,7 @@ export const initialTasks: Task[] = [
     category: 'Test',
     status: 'To Do',
     priority: 'High',
+    createdAt: new Date('2025-07-10T08:15:00'),
   },
   {
     id: '6',
@@ -47,6 +52,7 @@ export const initialTasks: Task[] = [
     category: 'Bug',
     status: 'To Do',
     priority: 'Medium',
+    createdAt: new Date('2025-07-03T12:20:00'),
   },
   {
     id: '7',
@@ -55,6 +61,7 @@ export const initialTasks: Task[] = [
     category: 'Feature',
     status: 'In Progress',
     priority: 'High',
+    createdAt: new Date('2025-07-14T17:55:00'),
   },
   {
     id: '8',
@@ -63,5 +70,6 @@ export const initialTasks: Task[] = [
     category: 'Refactor',
     status: 'Done',
     priority: 'Low',
+    createdAt: new Date('2025-07-06T10:05:00'),
   },
 ];
