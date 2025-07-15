@@ -1,12 +1,19 @@
 import React from 'react';
 import styles from './index.module.scss';
 import { STATUS_VALUES, type Status, type Task } from 'entities/TaskItem/model/types.ts';
-import { StatusColumn } from 'src/features/TaskList/ui/StatusColumn';
+import { StatusColumn } from 'features/TaskList/ui/StatusColumn';
 import { useSelector } from 'react-redux';
 import type { RootState } from 'app/store';
+import { Button } from '@admiral-ds/react-ui';
+import { useNavigate } from 'react-router-dom';
 
 export const TaskList: React.FC = () => {
   const tasks = useSelector((state: RootState) => state.task.tasks);
+
+  const navigate = useNavigate();
+  const handleCreateTask = () => {
+    navigate('/task/new');
+  };
 
   const tasksByStatus = STATUS_VALUES.reduce(
     (acc, status) => {
@@ -17,10 +24,15 @@ export const TaskList: React.FC = () => {
   );
 
   return (
-    <div className={styles.grid}>
-      {STATUS_VALUES.map((status) => (
-        <StatusColumn key={status} title={status} tasks={tasksByStatus[status]} />
-      ))}
+    <div className={styles.taskList}>
+      <Button dimension="s" appearance="secondary" onClick={handleCreateTask}>
+        Создать задачу
+      </Button>
+      <div className={styles.grid}>
+        {STATUS_VALUES.map((status) => (
+          <StatusColumn key={status} title={status} tasks={tasksByStatus[status]} />
+        ))}
+      </div>
     </div>
   );
 };

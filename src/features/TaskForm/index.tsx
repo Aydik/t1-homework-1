@@ -1,4 +1,4 @@
-import { type ChangeEvent, type FC, useState } from 'react';
+import { type ChangeEvent, type FC, useEffect, useState } from 'react';
 import { Button, InputField, Option, SelectField } from '@admiral-ds/react-ui';
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
@@ -11,13 +11,13 @@ import {
 } from 'entities/TaskItem/model/types.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from 'app/store';
-import { updateTaskById } from 'entities/TaskItem/model/taskSlice.ts';
+import { updateTaskById, createTask } from 'entities/TaskItem/model/taskSlice.ts';
 
 interface Props {
-  id: string;
+  id?: string;
 }
 
-export const TaskDetails: FC<Props> = ({ id }) => {
+export const TaskForm: FC<Props> = ({ id }) => {
   const tasks = useSelector((state: RootState) => state.task.tasks);
   const task = tasks.find((task) => task.id === id);
 
@@ -26,14 +26,26 @@ export const TaskDetails: FC<Props> = ({ id }) => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = useState<Omit<Task, 'id'>>({
-    title: task?.title || '',
-    description: task?.description || '',
-    category: task?.category || CATEGORY_VALUES[0],
-    status: task?.status || STATUS_VALUES[0],
-    priority: task?.priority || PRIORITY_VALUES[0],
+    title: '',
+    description: '',
+    category: CATEGORY_VALUES[0],
+    status: STATUS_VALUES[0],
+    priority: PRIORITY_VALUES[0],
   });
 
-  if (!task) {
+  useEffect(() => {
+    if (id && task) {
+      setFormState({
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        category: task.category,
+        priority: task.priority,
+      });
+    }
+  }, [id, task]);
+
+  if (id && !task) {
     return (
       <div className={styles.notFound}>
         <Typography type="h1" variant="Header/H1">
@@ -52,7 +64,11 @@ export const TaskDetails: FC<Props> = ({ id }) => {
 
   const handleSubmit = () => {
     if (formState.title.length > 0) {
-      dispatch(updateTaskById({ id, updatedTask: formState }));
+      if (id) {
+        dispatch(updateTaskById({ id, updatedTask: formState }));
+      } else {
+        dispatch(createTask(formState));
+      }
       navigate('/');
     }
   };
@@ -66,7 +82,7 @@ export const TaskDetails: FC<Props> = ({ id }) => {
       }}
     >
       <Typography type="h1" variant="Header/H1" className={styles.caption}>
-        Редактировать задачу
+        {id ? 'Редактировать задачу' : 'Создать задачу'}
       </Typography>
       <div className={styles.fields}>
         <InputField

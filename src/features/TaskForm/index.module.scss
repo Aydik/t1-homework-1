@@ -1,22 +1,26 @@
-.notFound{
+.notFound {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.form{
+
+.form {
   max-width: 500px;
+  min-width: 30vw;
 }
-.caption{
+
+.caption {
   text-align: center;
 }
-.fields{
+
+.fields {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.buttons{
+.buttons {
   display: flex;
   justify-content: center;
   gap: 12px;

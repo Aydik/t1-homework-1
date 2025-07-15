@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Task } from 'entities/TaskItem/model/types.ts';
+import { v4 as uuidv4 } from 'uuid';
 
 interface TasksState {
   tasks: Task[];
@@ -77,7 +78,7 @@ const tasksSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
-    updateTaskById(state, action: PayloadAction<{ id: string; updatedTask: Partial<Task> }>) {
+    updateTaskById(state, action: PayloadAction<{ id: string; updatedTask: Omit<Task, 'id'> }>) {
       const { id, updatedTask } = action.payload;
       const taskIndex = state.tasks.findIndex((task) => task.id === id);
 
@@ -91,8 +92,15 @@ const tasksSlice = createSlice({
     deleteTaskById(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter((task) => task.id !== action.payload);
     },
+    createTask(state, action: PayloadAction<Omit<Task, 'id'>>) {
+      const newTask: Task = {
+        id: uuidv4(),
+        ...action.payload,
+      };
+      state.tasks.push(newTask);
+    },
   },
 });
 
-export const { updateTaskById, deleteTaskById } = tasksSlice.actions;
+export const { updateTaskById, deleteTaskById, createTask } = tasksSlice.actions;
 export default tasksSlice.reducer;

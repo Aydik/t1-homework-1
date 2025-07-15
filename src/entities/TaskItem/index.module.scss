@@ -4,7 +4,7 @@
   border: 1px solid #ccc;
 }
 
-p{
+p {
   margin: 0;
 }
 
@@ -23,20 +23,21 @@ p{
   margin-bottom: 12px;
 }
 
-.controlBlock{
+.controlBlock {
   display: flex;
   justify-content: space-between;
   align-items: end;
 }
 
-.deleteButton{
+.deleteButton {
   all: unset;
   cursor: pointer;
   display: flex;
   color: red;
   transition: 0.2s;
   opacity: 0.5;
-  &:hover{
+
+  &:hover {
     scale: 1.05;
   }
 }

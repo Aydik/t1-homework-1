@@ -1,6 +1,9 @@
-.grid {
+.taskList {
   margin: 16px auto 0;
   max-width: 1400px;
+}
+
+.grid {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
