@@ -3,21 +3,25 @@ import { Button, InputField, Option, SelectField } from '@admiral-ds/react-ui';
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { useNavigate } from 'react-router-dom';
-import { useTask } from 'app/context/TaskContext.tsx';
 import {
   CATEGORY_VALUES,
   PRIORITY_VALUES,
   STATUS_VALUES,
   type Task,
 } from 'entities/TaskItem/model/types.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from 'app/store';
+import { updateTaskById } from 'entities/TaskItem/model/taskSlice.ts';
 
 interface Props {
   id: string;
 }
 
 export const TaskDetails: FC<Props> = ({ id }) => {
-  const { tasks, updateTaskById } = useTask();
+  const tasks = useSelector((state: RootState) => state.task.tasks);
   const task = tasks.find((task) => task.id === id);
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -48,7 +52,7 @@ export const TaskDetails: FC<Props> = ({ id }) => {
 
   const handleSubmit = () => {
     if (formState.title.length > 0) {
-      updateTaskById(id, formState);
+      dispatch(updateTaskById({ id, updatedTask: formState }));
       navigate('/');
     }
   };

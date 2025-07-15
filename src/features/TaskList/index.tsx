@@ -1,11 +1,12 @@
 import React from 'react';
-import { useTask } from 'app/context/TaskContext';
 import styles from './index.module.scss';
 import { STATUS_VALUES, type Status, type Task } from 'entities/TaskItem/model/types.ts';
 import { StatusColumn } from 'src/features/TaskList/ui/StatusColumn';
+import { useSelector } from 'react-redux';
+import type { RootState } from 'app/store';
 
 export const TaskList: React.FC = () => {
-  const { tasks } = useTask();
+  const tasks = useSelector((state: RootState) => state.task.tasks);
 
   const tasksByStatus = STATUS_VALUES.reduce(
     (acc, status) => {
