@@ -22,3 +22,21 @@ p{
   gap: 8px;
   margin-bottom: 12px;
 }
+
+.controlBlock{
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.deleteButton{
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  color: red;
+  transition: 0.2s;
+  opacity: 0.5;
+  &:hover{
+    scale: 1.05;
+  }
+}

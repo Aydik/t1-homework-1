@@ -4,15 +4,23 @@ import type { Task } from './model/types';
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { deleteTaskById } from 'entities/TaskItem/model/taskSlice.ts';
+import { Icon } from 'shared/ui/Icon/Icon.tsx';
 
 interface Props {
   task: Task;
 }
 
 export const TaskItem: FC<Props> = ({ task }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleEdit = (id: string) => {
-    navigate(`task/${id}`);
+
+  const handleEdit = () => {
+    navigate(`task/${task.id}`);
+  };
+  const handleDelete = () => {
+    dispatch(deleteTaskById(task.id));
   };
   return (
     <div className={styles.card}>
@@ -36,9 +44,14 @@ export const TaskItem: FC<Props> = ({ task }) => {
             Приоритет: {task.priority}
           </Tag>
         </div>
-        <Button dimension="s" appearance="tertiary" onClick={() => handleEdit(task.id)}>
-          Редактировать
-        </Button>
+        <div className={styles.controlBlock}>
+          <Button dimension="s" appearance="tertiary" onClick={handleEdit}>
+            Редактировать
+          </Button>
+          <button className={styles.deleteButton} onClick={handleDelete}>
+            <Icon name="delete" />
+          </button>
+        </div>
       </div>
     </div>
   );
