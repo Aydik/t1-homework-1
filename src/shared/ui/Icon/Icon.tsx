@@ -6,7 +6,18 @@ interface Props {
   className?: string;
 }
 
-export const Icon: FC<Props> = ({ name, size = { width: 24, height: 24 }, className = '' }) => {
+/**
+ * Компонент Icon отображает SVG-иконку из спрайта по имени.
+ * Позволяет задать размер и дополнительные стили.
+ *
+ * @param {Props} props - Свойства компонента
+ * @returns JSX элемент с SVG иконкой
+ */
+export const Icon: FC<Props> = ({
+  name,
+  size = { width: 24, height: 24 },
+  className = '',
+}: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

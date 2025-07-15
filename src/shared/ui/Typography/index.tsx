@@ -13,12 +13,19 @@ const StyledTypography = styled.div<{ $variant: keyof typeof typography }>`
   ${({ $variant }) => typography[$variant]}
 `;
 
+/**
+ * Компонент Typography для отображения текста с заданным HTML-тегом и стилем.
+ * Использует styled-components для применения типографических стилей из '@admiral-ds/react-ui'.
+ *
+ * @param {Props} props - Свойства компонента
+ * @returns JSX элемент с текстом и нужным стилем
+ */
 export const Typography: FC<Props> = ({
   type: Component = 'span',
   variant,
   className,
   children,
-}) => {
+}: Props) => {
   return (
     <StyledTypography as={Component} $variant={variant} className={className}>
       {children}

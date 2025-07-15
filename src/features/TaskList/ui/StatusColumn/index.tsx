@@ -10,7 +10,14 @@ interface Props {
   tasks: Task[];
 }
 
-export const StatusColumn: FC<Props> = ({ title, tasks }) => {
+/**
+ * Компонент колонки статуса задач.
+ * Отображает заголовок и список задач, относящихся с данным статусом.
+ *
+ * @param {Props} props - Свойства компонента
+ * @returns JSX элемент колонки со списком задач
+ */
+export const StatusColumn: FC<Props> = ({ title, tasks }: Props) => {
   return (
     <div className={styles.statusColumn}>
       <Typography type="h2" variant="Header/H2" className={styles.title}>
@@ -20,7 +27,7 @@ export const StatusColumn: FC<Props> = ({ title, tasks }) => {
       <ul className={styles.taskList}>
         {tasks.map((task) => (
           <li key={task.id}>
-            <TaskItem key={task.id} task={task} />
+            <TaskItem task={task} />
           </li>
         ))}
       </ul>

@@ -13,16 +13,31 @@ interface Props {
   task: Task;
 }
 
-export const TaskItem: FC<Props> = ({ task }) => {
+/**
+ * Компонент для отображения задачи с возможностью редактирования и удаления.
+ * @param {Props} props - Свойства компонента
+ * @returns JSX элемент задачи
+ */
+export const TaskItem: FC<Props> = ({ task }: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  /**
+   * Обработчик клика для перехода к редактированию задачи.
+   * Использует react-router для навигации на страницу редактирования задачи.
+   */
   const handleEdit = () => {
     navigate(`task/${task.id}`);
   };
+
+  /**
+   * Обработчик клика для удаления задачи.
+   * Вызывает action redux для удаления задачи по ID.
+   */
   const handleDelete = () => {
     dispatch(deleteTaskById(task.id));
   };
+
   return (
     <div className={styles.card}>
       <div>
