@@ -27,7 +27,7 @@ export const Icon: FC<Props> = ({
       }}
       className={className}
     >
-      <use xlinkHref={`/assets/images/vector/sprites.svg#${name}`}></use>
+      <use xlinkHref={`${import.meta.env.BASE_URL}assets/images/vector/sprites.svg#${name}`} />
     </svg>
   );
 };

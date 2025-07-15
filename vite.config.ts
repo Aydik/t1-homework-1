@@ -4,6 +4,7 @@ import * as path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/t1-homework-1/',
   plugins: [react()],
   css: {
     postcss: './postcss.config.js',

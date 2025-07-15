@@ -6,7 +6,7 @@ import { store } from 'app/store';
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename="/t1-homework-1">
         <AppRouter />
       </BrowserRouter>
     </Provider>
