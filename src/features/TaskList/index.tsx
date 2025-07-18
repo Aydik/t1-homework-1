@@ -28,6 +28,7 @@ export const TaskList: FC = () => {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   /**
    * Эффект для загрузки задач при изменении параметров поиска.
@@ -35,6 +36,7 @@ export const TaskList: FC = () => {
    * В случае ошибки устанавливает ошибку в состояние.
    */
   useEffect(() => {
+    setLoading(true);
     const priority = searchParams.get('priority');
     const category = searchParams.get('category');
 
@@ -47,7 +49,8 @@ export const TaskList: FC = () => {
     fakeAPIRequest('GET', 'tasks', undefined, filters)
       .then((res) => res as Task[])
       .then((tasks: Task[]) => setTasks(tasks))
-      .catch(() => setError(new Error('Ошибка загрузки задач')));
+      .catch(() => setError(new Error('Ошибка загрузки задач')))
+      .finally(() => setLoading(false));
   }, [searchParams]);
 
   /**
@@ -89,6 +92,7 @@ export const TaskList: FC = () => {
           title={status}
           tasks={tasksByStatus[status]}
           onDelete={onDelete}
+          isLoading={loading}
         />
       ))}
     </div>

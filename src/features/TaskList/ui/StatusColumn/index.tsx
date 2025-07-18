@@ -4,11 +4,13 @@ import { TaskItem } from 'entities/TaskItem';
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { Divider } from '@admiral-ds/react-ui';
+import { TaskItemSkeleton } from 'entities/TaskItem/ui/TaskItemSkeleton';
 
 interface Props {
   title: string;
   tasks: Task[];
   onDelete: (id: string) => void;
+  isLoading?: boolean;
 }
 
 /**
@@ -22,7 +24,7 @@ interface Props {
  * передается в компонент задачи
  * @returns JSX элемент колонки задач
  */
-export const StatusColumn: FC<Props> = ({ title, tasks, onDelete }: Props) => {
+export const StatusColumn: FC<Props> = ({ title, tasks, onDelete, isLoading }: Props) => {
   return (
     <div className={styles.statusColumn}>
       <Typography type="h2" variant="Header/H2" className={styles.title}>
@@ -30,11 +32,17 @@ export const StatusColumn: FC<Props> = ({ title, tasks, onDelete }: Props) => {
       </Typography>
       <Divider />
       <ul className={styles.taskList}>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <TaskItem task={task} onDelete={onDelete} />
-          </li>
-        ))}
+        {isLoading
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <li key={index}>
+                <TaskItemSkeleton key={index} />
+              </li>
+            ))
+          : tasks.map((task) => (
+              <li key={task.id}>
+                <TaskItem task={task} onDelete={onDelete} />
+              </li>
+            ))}
       </ul>
     </div>
   );
