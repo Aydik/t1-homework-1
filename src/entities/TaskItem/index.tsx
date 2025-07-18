@@ -1,16 +1,15 @@
 import { type FC } from 'react';
 import { Tag, Button } from '@admiral-ds/react-ui';
-import type { Task } from './model/types';
+import type { Task } from 'shared/model/types';
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { deleteTaskById } from 'entities/TaskItem/model/taskSlice.ts';
 import { Icon } from 'shared/ui/Icon/Icon.tsx';
-import { formatDate } from 'shared/lib/formatDate.ts';
+import { formatDate } from 'shared/lib/utils/formatDate.ts';
 
 interface Props {
   task: Task;
+  onDelete: (id: string) => void;
 }
 
 /**
@@ -18,8 +17,7 @@ interface Props {
  * @param {Props} props - Свойства компонента
  * @returns JSX элемент задачи
  */
-export const TaskItem: FC<Props> = ({ task }: Props) => {
-  const dispatch = useDispatch();
+export const TaskItem: FC<Props> = ({ task, onDelete }: Props) => {
   const navigate = useNavigate();
 
   /**
@@ -28,14 +26,6 @@ export const TaskItem: FC<Props> = ({ task }: Props) => {
    */
   const handleEdit = () => {
     navigate(`task/${task.id}`);
-  };
-
-  /**
-   * Обработчик клика для удаления задачи.
-   * Вызывает action redux для удаления задачи по ID.
-   */
-  const handleDelete = () => {
-    dispatch(deleteTaskById(task.id));
   };
 
   return (
@@ -67,7 +57,7 @@ export const TaskItem: FC<Props> = ({ task }: Props) => {
           <Button dimension="s" appearance="tertiary" onClick={handleEdit}>
             Редактировать
           </Button>
-          <button className={styles.deleteButton} onClick={handleDelete}>
+          <button className={styles.deleteButton} onClick={() => onDelete(task.id)}>
             <Icon name="delete" />
           </button>
         </div>

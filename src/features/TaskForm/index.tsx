@@ -3,15 +3,8 @@ import { Button, Divider, InputField, Option, SelectField } from '@admiral-ds/re
 import styles from './index.module.scss';
 import { Typography } from 'shared/ui/Typography';
 import { useNavigate } from 'react-router-dom';
-import {
-  CATEGORY_VALUES,
-  PRIORITY_VALUES,
-  STATUS_VALUES,
-  type Task,
-} from 'entities/TaskItem/model/types.ts';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from 'app/store';
-import { updateTaskById, createTask } from 'entities/TaskItem/model/taskSlice.ts';
+import { CATEGORY_VALUES, PRIORITY_VALUES, STATUS_VALUES, type Task } from 'shared/model/types';
+import { fakeAPIRequest } from 'shared/lib/api/fakeAPIInstance.ts';
 
 interface Props {
   id?: string;
@@ -26,12 +19,6 @@ interface Props {
  * @returns JSX элемент формы задачи
  */
 export const TaskForm: FC<Props> = ({ id }: Props) => {
-  // Селектор для получения списка всех задач из состояния Redux
-  const tasks = useSelector((state: RootState) => state.task.tasks);
-  // Поиск задачи по id
-  const task = tasks.find((task) => task.id === id);
-
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Состояние формы, без id и createdAt, так как они управляются отдельно
@@ -43,35 +30,28 @@ export const TaskForm: FC<Props> = ({ id }: Props) => {
     priority: PRIORITY_VALUES[0],
   });
 
+  const [error, setError] = useState<Error | null>(null);
+
   /**
    * Заполнение формы при наличии id и найденной задачи.
    * Выполняется при изменении id или задачи.
    */
   useEffect(() => {
-    if (id && task) {
-      setFormState({
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        category: task.category,
-        priority: task.priority,
-      });
+    if (id) {
+      fakeAPIRequest('GET', `tasks/${id}`)
+        .then((res) => res as Task)
+        .then((task) =>
+          setFormState({
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            category: task.category,
+            priority: task.priority,
+          }),
+        )
+        .catch(() => navigate('/'));
     }
-  }, [id, task]);
-
-  // Если id задан, но задача не найдена — показываем сообщение об ошибке
-  if (id && !task) {
-    return (
-      <div className={styles.notFound}>
-        <Typography type="h1" variant="Header/H1">
-          Задача не найдена
-        </Typography>
-        <Button type="button" dimension="s" appearance="tertiary" onClick={() => navigate('/')}>
-          Назад
-        </Button>
-      </div>
-    );
-  }
+  }, [id, navigate]);
 
   /**
    * Обновляет поле формы с заданным именем значением value.
@@ -91,11 +71,14 @@ export const TaskForm: FC<Props> = ({ id }: Props) => {
   const handleSubmit = () => {
     if (formState.title.length > 0) {
       if (id) {
-        dispatch(updateTaskById({ id, updatedTask: formState }));
+        fakeAPIRequest('PATCH', `tasks/${id}`, formState)
+          .then(() => navigate('/'))
+          .catch((error) => setError(error));
       } else {
-        dispatch(createTask(formState));
+        fakeAPIRequest('POST', 'tasks')
+          .then(() => navigate('/'))
+          .catch((error) => setError(error));
       }
-      navigate('/');
     }
   };
 
@@ -111,6 +94,11 @@ export const TaskForm: FC<Props> = ({ id }: Props) => {
         {id ? 'Редактировать задачу' : 'Создать задачу'}
       </Typography>
       <Divider />
+      {error && (
+        <Typography type="p" variant="Main/XS-bold" className={styles.error}>
+          {error.message}
+        </Typography>
+      )}
       <div className={styles.fields}>
         <InputField
           value={formState.title}

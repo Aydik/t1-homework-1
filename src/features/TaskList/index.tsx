@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss';
-import { STATUS_VALUES, type Status, type Task } from 'entities/TaskItem/model/types.ts';
+import { STATUS_VALUES, type Status, type Task } from 'shared/model/types';
 import { StatusColumn } from 'features/TaskList/ui/StatusColumn';
-import { useSelector } from 'react-redux';
-import type { RootState } from 'app/store';
-import { Button } from '@admiral-ds/react-ui';
+import { Button, Divider } from '@admiral-ds/react-ui';
 import { useNavigate } from 'react-router-dom';
+import { fakeAPIRequest } from 'shared/lib/api/fakeAPIInstance.ts';
 
 /**
  * Компонент отображения списка задач, распределённых по статусам.
@@ -18,9 +17,17 @@ import { useNavigate } from 'react-router-dom';
  * @returns JSX элемент списка задач
  */
 export const TaskList: React.FC = () => {
-  const tasks = useSelector((state: RootState) => state.task.tasks);
-
   const navigate = useNavigate();
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    fakeAPIRequest('GET', 'tasks')
+      .then((res) => res as Task[])
+      .then((tasks: Task[]) => setTasks(tasks))
+      .catch(() => setError(new Error('Ошибка загрузки задач')));
+  }, []);
 
   /**
    * Обработчик нажатия на кнопку создания новой задачи.
@@ -28,6 +35,16 @@ export const TaskList: React.FC = () => {
    */
   const handleCreateTask = () => {
     navigate('/task/new');
+  };
+
+  /**
+   * Обработчик клика для удаления задачи.
+   * Вызывает action redux для удаления задачи по ID.
+   */
+  const onDelete = (id: string) => {
+    fakeAPIRequest('DELETE', `tasks/${id}`)
+      .then(() => setTasks((tasks) => tasks.filter((task) => task.id !== id)))
+      .catch((error) => console.error((error as Error).message));
   };
 
   /**
@@ -43,14 +60,24 @@ export const TaskList: React.FC = () => {
     {} as Record<Status, Task[]>,
   );
 
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
   return (
     <div className={styles.taskList}>
+      <Divider />
       <Button dimension="s" appearance="secondary" onClick={handleCreateTask}>
         Создать задачу
       </Button>
       <div className={styles.grid}>
         {STATUS_VALUES.map((status) => (
-          <StatusColumn key={status} title={status} tasks={tasksByStatus[status]} />
+          <StatusColumn
+            key={status}
+            title={status}
+            tasks={tasksByStatus[status]}
+            onDelete={onDelete}
+          />
         ))}
       </div>
     </div>

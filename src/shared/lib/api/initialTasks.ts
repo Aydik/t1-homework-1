@@ -1,4 +1,4 @@
-import type { Task } from 'entities/TaskItem/model/types.ts';
+import type { Task } from 'shared/model/types';
 
 export const initialTasks: Task[] = [
   {
