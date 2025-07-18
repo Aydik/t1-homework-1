@@ -1,4 +1,4 @@
-import type { Task } from 'shared/model/types.ts';
+import type { Category, Priority, Task } from 'shared/model/types.ts';
 import { v4 as uuidv4 } from 'uuid';
 import { initialTasks } from 'shared/lib/api/initialTasks.ts';
 
@@ -23,11 +23,28 @@ export const initTasks = (): Task[] => {
   return initialTasks;
 };
 
+export interface TaskFilters {
+  q?: string;
+  priority?: Priority;
+  category?: Category;
+}
+
 /**
  * Получение всех задач
  */
-export const getTasks = (): Task[] => {
-  return storage.get();
+export const getTasks = (filters?: TaskFilters): Task[] => {
+  const tasks = storage.get();
+
+  if (!filters) return tasks;
+
+  return tasks.filter((task: Task) => {
+    const matchQuery = !filters.q || task.title.toLowerCase().includes(filters.q.toLowerCase());
+
+    const matchPriority = !filters.priority || task.priority === filters.priority;
+    const matchCategory = !filters.category || task.category === filters.category;
+
+    return matchQuery && matchPriority && matchCategory;
+  });
 };
 
 /**
