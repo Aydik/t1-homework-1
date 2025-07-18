@@ -1,4 +1,4 @@
-import { type ChangeEvent, type FC, useEffect, useState } from 'react';
+import { type ChangeEvent, type FC, useEffect, useRef, useState } from 'react';
 import {
   type Priority,
   PRIORITY_VALUES,
@@ -7,10 +7,11 @@ import {
 } from 'shared/model/types.ts';
 import { InputField, Option, SelectField } from '@admiral-ds/react-ui';
 import styles from './index.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebouncedValue } from 'shared/lib/hooks/useDebouncedValue.ts';
 
 export const TaskFilters: FC = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -19,7 +20,23 @@ export const TaskFilters: FC = () => {
 
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
 
+  const isInitialLoad = useRef(true);
+
   useEffect(() => {
+    const q = searchParams.get('q') || '';
+    const priority = searchParams.get('priority') as Priority;
+    const category = searchParams.get('category') as Category;
+
+    setSearchQuery(q);
+    setSelectedPriority(PRIORITY_VALUES.includes(priority) ? priority : null);
+    setSelectedCategory(CATEGORY_VALUES.includes(category) ? category : null);
+
+    setTimeout(() => (isInitialLoad.current = false), 600);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (isInitialLoad.current) return;
+
     const params = new URLSearchParams();
 
     if (debouncedSearchQuery) params.set('q', debouncedSearchQuery);
