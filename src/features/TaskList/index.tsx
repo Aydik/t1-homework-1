@@ -17,12 +17,11 @@ import type { TaskFilters } from 'shared/lib/api/fakeApi.ts';
 /**
  * Компонент отображения списка задач, распределённых по статусам.
  *
- * Извлекает задачи из Redux-состояния, группирует их по статусу
- * и рендерит колонки с задачами для каждого статуса.
+ * Извлекает задачи с сервера через fakeAPIRequest с применением фильтров из URL-параметров.
+ * Группирует задачи по статусам и отображает их в отдельных колонках.
+ * Позволяет удалять задачи.
  *
- * Также содержит кнопку для создания новой задачи.
- *
- * @returns JSX элемент списка задач
+ * @returns JSX элемент списка задачи
  */
 export const TaskList: FC = () => {
   const [searchParams] = useSearchParams();
@@ -30,6 +29,11 @@ export const TaskList: FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
+  /**
+   * Эффект для загрузки задач при изменении параметров поиска.
+   * Формирует фильтры из query параметров и получает задачи с API.
+   * В случае ошибки устанавливает ошибку в состояние.
+   */
   useEffect(() => {
     const priority = searchParams.get('priority');
     const category = searchParams.get('category');
@@ -47,8 +51,12 @@ export const TaskList: FC = () => {
   }, [searchParams]);
 
   /**
-   * Обработчик клика для удаления задачи.
-   * Вызывает action redux для удаления задачи по ID.
+   * Обработчик удаления задачи.
+   * Вызывает fakeAPIRequest для удаления задачи по ID,
+   * после успешного удаления обновляет локальное состояние задач,
+   * фильтруя удалённую задачу.
+   *
+   * @param {string} id - Идентификатор задачи для удаления
    */
   const onDelete = (id: string) => {
     fakeAPIRequest('DELETE', `tasks/${id}`)
