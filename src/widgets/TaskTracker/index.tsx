@@ -22,7 +22,7 @@ export const TaskTracker: FC = () => {
    * mock-данными.
    */
   const handleInitMock = () => {
-    fakeAPIRequest('POST', 'tasks/init').then(() => navigate('/'));
+    fakeAPIRequest('POST', 'tasks/init').then(() => window.location.reload());
   };
 
   return (
