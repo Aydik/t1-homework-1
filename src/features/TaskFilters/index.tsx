@@ -1,4 +1,4 @@
-import { type ChangeEvent, type FC, useState } from 'react';
+import { type ChangeEvent, type FC, useEffect, useState } from 'react';
 import {
   type Priority,
   PRIORITY_VALUES,
@@ -7,11 +7,27 @@ import {
 } from 'shared/model/types.ts';
 import { InputField, Option, SelectField } from '@admiral-ds/react-ui';
 import styles from './index.module.scss';
+import { useNavigate } from 'react-router-dom';
+import { useDebouncedValue } from 'shared/lib/hooks/useDebouncedValue.ts';
 
 export const TaskFilters: FC = () => {
+  const navigate = useNavigate();
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedPriority, setSelectedPriority] = useState<Priority | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (debouncedSearchQuery) params.set('q', debouncedSearchQuery);
+    if (selectedPriority) params.set('priority', selectedPriority);
+    if (selectedCategory) params.set('category', selectedCategory);
+
+    navigate({ search: params.toString() }, { replace: true });
+  }, [debouncedSearchQuery, selectedPriority, selectedCategory, navigate]);
 
   const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value as Category;
