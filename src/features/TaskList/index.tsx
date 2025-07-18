@@ -1,8 +1,18 @@
 import { type FC, useEffect, useState } from 'react';
 import styles from './index.module.scss';
-import { STATUS_VALUES, type Status, type Task } from 'shared/model/types';
+import {
+  STATUS_VALUES,
+  PRIORITY_VALUES,
+  CATEGORY_VALUES,
+  type Status,
+  type Priority,
+  type Category,
+  type Task,
+} from 'shared/model/types';
 import { StatusColumn } from 'features/TaskList/ui/StatusColumn';
 import { fakeAPIRequest } from 'shared/lib/api/fakeAPIInstance.ts';
+import { useSearchParams } from 'react-router-dom';
+import type { TaskFilters } from 'shared/lib/api/fakeApi.ts';
 
 /**
  * Компонент отображения списка задач, распределённых по статусам.
@@ -15,15 +25,26 @@ import { fakeAPIRequest } from 'shared/lib/api/fakeAPIInstance.ts';
  * @returns JSX элемент списка задач
  */
 export const TaskList: FC = () => {
+  const [searchParams] = useSearchParams();
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    fakeAPIRequest('GET', 'tasks')
+    const priority = searchParams.get('priority');
+    const category = searchParams.get('category');
+
+    const filters: TaskFilters = {
+      q: searchParams.get('q') || undefined,
+      priority: PRIORITY_VALUES.includes(priority as Priority) ? (priority as Priority) : undefined,
+      category: CATEGORY_VALUES.includes(category as Category) ? (category as Category) : undefined,
+    };
+
+    fakeAPIRequest('GET', 'tasks', undefined, filters)
       .then((res) => res as Task[])
       .then((tasks: Task[]) => setTasks(tasks))
       .catch(() => setError(new Error('Ошибка загрузки задач')));
-  }, []);
+  }, [searchParams]);
 
   /**
    * Обработчик клика для удаления задачи.
