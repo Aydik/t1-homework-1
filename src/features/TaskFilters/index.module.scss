@@ -1,0 +1,24 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  & > div {
+    flex-grow: 1;
+  }
+
+  & > div:first-child {
+    min-width: 240px;
+  }
+}
+
+.selectFields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  & > div {
+    flex-grow: 1;
+    min-width: 200px;
+  }
+}

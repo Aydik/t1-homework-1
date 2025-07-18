@@ -1,22 +1,17 @@
 .taskList {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 16px auto 0;
-  max-width: 1400px;
-  & > :first-child {
-    align-self: flex-end;
-    margin-right: 16px;
-  }
-}
-
-.grid {
+  padding: 16px;
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  & > * {
+    flex: 1 1 320px;
+    max-width: 100%;
+  }
 }
 
-.grid > * {
-  flex: 1 1 320px;
-  max-width: 100%;
+
+@media (max-width: 576px)  {
+  .taskList {
+    padding: 16px 0;
+  }
 }

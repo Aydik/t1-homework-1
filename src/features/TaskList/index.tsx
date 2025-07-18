@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import { STATUS_VALUES, type Status, type Task } from 'shared/model/types';
 import { StatusColumn } from 'features/TaskList/ui/StatusColumn';
-import { Button, Divider } from '@admiral-ds/react-ui';
-import { useNavigate } from 'react-router-dom';
 import { fakeAPIRequest } from 'shared/lib/api/fakeAPIInstance.ts';
 
 /**
@@ -16,9 +14,7 @@ import { fakeAPIRequest } from 'shared/lib/api/fakeAPIInstance.ts';
  *
  * @returns JSX элемент списка задач
  */
-export const TaskList: React.FC = () => {
-  const navigate = useNavigate();
-
+export const TaskList: FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
@@ -28,14 +24,6 @@ export const TaskList: React.FC = () => {
       .then((tasks: Task[]) => setTasks(tasks))
       .catch(() => setError(new Error('Ошибка загрузки задач')));
   }, []);
-
-  /**
-   * Обработчик нажатия на кнопку создания новой задачи.
-   * Переходит на страницу создания задачи.
-   */
-  const handleCreateTask = () => {
-    navigate('/task/new');
-  };
 
   /**
    * Обработчик клика для удаления задачи.
@@ -66,20 +54,14 @@ export const TaskList: React.FC = () => {
 
   return (
     <div className={styles.taskList}>
-      <Divider />
-      <Button dimension="s" appearance="secondary" onClick={handleCreateTask}>
-        Создать задачу
-      </Button>
-      <div className={styles.grid}>
-        {STATUS_VALUES.map((status) => (
-          <StatusColumn
-            key={status}
-            title={status}
-            tasks={tasksByStatus[status]}
-            onDelete={onDelete}
-          />
-        ))}
-      </div>
+      {STATUS_VALUES.map((status) => (
+        <StatusColumn
+          key={status}
+          title={status}
+          tasks={tasksByStatus[status]}
+          onDelete={onDelete}
+        />
+      ))}
     </div>
   );
 };

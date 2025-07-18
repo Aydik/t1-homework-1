@@ -75,7 +75,7 @@ export const TaskForm: FC<Props> = ({ id }: Props) => {
           .then(() => navigate('/'))
           .catch((error) => setError(error));
       } else {
-        fakeAPIRequest('POST', 'tasks')
+        fakeAPIRequest('POST', 'tasks', formState)
           .then(() => navigate('/'))
           .catch((error) => setError(error));
       }
@@ -94,11 +94,6 @@ export const TaskForm: FC<Props> = ({ id }: Props) => {
         {id ? 'Редактировать задачу' : 'Создать задачу'}
       </Typography>
       <Divider />
-      {error && (
-        <Typography type="p" variant="Main/XS-bold" className={styles.error}>
-          {error.message}
-        </Typography>
-      )}
       <div className={styles.fields}>
         <InputField
           value={formState.title}
@@ -156,6 +151,11 @@ export const TaskForm: FC<Props> = ({ id }: Props) => {
             </Option>
           ))}
         </SelectField>
+        {error && (
+          <Typography type="p" variant="Additional/S" className={styles.error}>
+            {error.message}
+          </Typography>
+        )}
       </div>
       <div className={styles.buttons}>
         <Button type="submit" dimension="s" appearance="primary">

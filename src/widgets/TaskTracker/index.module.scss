@@ -1,0 +1,24 @@
+.taskTracker {
+  max-width: 1400px;
+  margin: 16px auto 0;
+}
+
+.control{
+  padding: 24px;
+  gap: 16px 100px;
+}
+
+@media (max-width: 576px)  {
+  .control {
+    padding: 24px 0;
+  }
+}
+
+.buttons{
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  column-gap: 16px;
+  row-gap: 8px;
+}

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import { TaskList } from 'features/TaskList';
 import { Typography } from 'shared/ui/Typography';
 import styles from './index.module.scss';
+import { TaskTracker } from 'widgets/TaskTracker';
 
 export const IndexPage: FC = () => {
   return (
@@ -9,7 +9,7 @@ export const IndexPage: FC = () => {
       <Typography type="h1" variant="Header/H1" className={styles.title}>
         Трекер задач
       </Typography>
-      <TaskList />
+      <TaskTracker />
     </div>
   );
 };
